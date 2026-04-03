@@ -74,6 +74,20 @@ class Board:
                     )
 
 
+class Player:
+    def __init__(self, width: int, height: int, speed: int = 5) -> None:
+        self.width = width
+        self.height = height
+        self.speed = speed
+
+        self.image = pygame.Surface((20, 20))
+        self.image.fill((200, 200, 50))
+        self.rect = self.image.get_rect(center=(self.width // 2, self.height // 2))
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
+
 class Game:
     def __init__(self, width: int, height: int) -> None:
         self.width = width
@@ -87,10 +101,12 @@ class Game:
         )
 
         self.board = Board(self.width, self.height, level_one)
+        self.player = Player(self.width, self.height)
 
     def draw(self, screen):
         self.background.draw(screen)
         self.board.draw(screen)
+        self.player.draw(screen)
 
 
 class GameManager:
