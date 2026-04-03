@@ -19,73 +19,41 @@ class Background:
         screen.blit(self.image, self.rect)
 
 
-class Board:
-    def __init__(self, width: int, height: int, board) -> None:
-        self.width = width
-        self.height = height
-        self.board = board
+class Pellet(pygame.sprite.Sprite):
+    def __init__(self, radius: int, coord_x: int, coord_y: int) -> None:
+        super().__init__()
 
-    def draw(self, screen):
-        pellet_rad = 4
-        pellet_color = (200, 200, 200)
+        self.radius = radius
+        self.coord_x = coord_x
+        self.coord_y = coord_y
 
-        power_pellet_rad = pellet_rad * 2
-        power_pellet_color = (200, 200, 50)
+        pellet_clr = (200, 200, 200)
 
-        rect_color = (40, 40, 200)
-        wall_padding = 4
-
-        board_wd, board_ht = (
-            self.width // len(self.board[0]),
-            self.height // len(self.board),
-        )
-
-        for i in range(len(self.board)):
-            for j in range(len(self.board[i])):
-                if self.board[i][j] == 1:
-                    pygame.draw.circle(
-                        screen,
-                        pellet_color,
-                        (
-                            j * board_wd + board_wd // 2,
-                            i * board_ht + board_ht // 2,
-                        ),
-                        pellet_rad,
-                    )
-
-                if self.board[i][j] == 2:
-                    pygame.draw.circle(
-                        screen,
-                        power_pellet_color,
-                        (j * board_wd + board_wd // 2, i * board_ht + board_ht // 2),
-                        power_pellet_rad,
-                    )
-
-                if self.board[i][j] == 3:
-                    pygame.draw.rect(
-                        screen,
-                        rect_color,
-                        (
-                            j * board_wd + wall_padding,
-                            i * board_ht + wall_padding,
-                            board_wd - 2 * wall_padding,
-                            board_ht - 2 * wall_padding,
-                        ),
-                    )
-
-
-class Player:
-    def __init__(self, width: int, height: int, speed: int = 5) -> None:
-        self.width = width
-        self.height = height
-        self.speed = speed
-
-        self.image = pygame.Surface((20, 20))
-        self.image.fill((200, 200, 50))
-        self.rect = self.image.get_rect(center=(self.width // 2, self.height // 2))
+        self.image = pygame.Surface((radius * 2, radius * 2))
+        pygame.draw.circle(self.image, pellet_clr, (radius, radius), radius)
+        self.rect = self.image.get_rect(center=(coord_x, coord_y))
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
+
+
+class Board:
+    def __init__(self, width: int, height: int) -> None:
+        self.width = width
+        self.height = height
+
+        bg_clr = (10, 10, 20)
+        self.board = Background(self.width, self.height, bg_clr)
+
+        self.pellets = pygame.sprite.Group()
+        for i in range(10):
+            self.pellets.add(Pellet(5, self.width // 2 + i * 20, self.height // 2))
+
+    def draw(self, screen):
+        self.board.draw(screen)
+
+        for pellet in self.pellets:
+            pellet.draw(screen)
 
 
 class Game:
@@ -93,20 +61,10 @@ class Game:
         self.width = width
         self.height = height
 
-        bg_color = (10, 10, 20)
-        self.background = Background(
-            self.width,
-            self.height,
-            bg_color,
-        )
-
-        self.board = Board(self.width, self.height, level_one)
-        self.player = Player(self.width, self.height)
+        self.board = Board(self.width, self.height)
 
     def draw(self, screen):
-        self.background.draw(screen)
         self.board.draw(screen)
-        self.player.draw(screen)
 
 
 class GameManager:
