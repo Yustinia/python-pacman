@@ -28,12 +28,50 @@ class Board:
     def draw(self, screen):
         pellet_rad = 4
         pellet_color = (200, 200, 200)
+
+        power_pellet_rad = pellet_rad * 2
+        power_pellet_color = (200, 200, 50)
+
         rect_color = (40, 40, 200)
+        wall_padding = 4
+
+        board_wd, board_ht = (
+            self.width // len(self.board[0]),
+            self.height // len(self.board),
+        )
 
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 if self.board[i][j] == 1:
-                    pass
+                    pygame.draw.circle(
+                        screen,
+                        pellet_color,
+                        (
+                            j * board_wd + board_wd // 2,
+                            i * board_ht + board_ht // 2,
+                        ),
+                        pellet_rad,
+                    )
+
+                if self.board[i][j] == 2:
+                    pygame.draw.circle(
+                        screen,
+                        power_pellet_color,
+                        (j * board_wd + board_wd // 2, i * board_ht + board_ht // 2),
+                        power_pellet_rad,
+                    )
+
+                if self.board[i][j] == 3:
+                    pygame.draw.rect(
+                        screen,
+                        rect_color,
+                        (
+                            j * board_wd + wall_padding,
+                            i * board_ht + wall_padding,
+                            board_wd - 2 * wall_padding,
+                            board_ht - 2 * wall_padding,
+                        ),
+                    )
 
 
 class Game:
