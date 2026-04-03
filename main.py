@@ -148,8 +148,9 @@ class Board:
 
         self.pellets = pygame.sprite.Group()
         self.power_pellets = pygame.sprite.Group()
-        board_wd, board_ht = self.width // len(self.board[0]), self.height // len(
-            self.board
+        board_wd, board_ht = (
+            self.width // len(self.board[0]),
+            self.height // len(self.board),
         )
 
         self.player = Player(self.width, self.height, (255, 255, 0))
@@ -208,12 +209,20 @@ class Game:
         self.height = height
 
         self.board = Board(self.width, self.height)
+        self.font = pygame.font.Font("assets/StudyNight.otf", 36)
 
     def update(self):
         self.board.update()
 
     def draw(self, screen):
         self.board.draw(screen)
+
+        current_pellets = len(self.board.pellets) + len(self.board.power_pellets)
+        text_surf = self.font.render(
+            f"Pellets: {current_pellets}", True, (255, 255, 255)
+        )
+        text_rect = text_surf.get_rect(topleft=(10, 10))
+        screen.blit(text_surf, text_rect)
 
 
 class GameManager:
@@ -253,6 +262,7 @@ class GameManager:
 
 
 def main() -> None:
+    pygame.init()
     gm = GameManager()
     gm.runner()
 
