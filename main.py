@@ -70,21 +70,28 @@ class Wall(pygame.sprite.Sprite):
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, width, height, bx_wd, bx_ht, color, speed=5) -> None:
+    def __init__(self, width, height, color, radius: int = 10, speed: int = 5) -> None:
         super().__init__()
 
         self.width = width
         self.height = height
-        self.bx_wd = bx_wd
-        self.bx_ht = bx_ht
         self.color = color
+        self.radius = radius
         self.speed = speed
 
-        self.image = pygame.Surface((self.bx_wd, self.bx_ht))
-        pygame.draw.rect(
-            self.image, self.color, (0, 0, self.bx_wd, self.bx_ht), pygame.SRCALPHA
+        self.image = pygame.Surface((self.radius * 2, self.radius * 2))
+        pygame.draw.circle(
+            self.image,
+            self.color,
+            (self.radius, self.radius),
+            self.radius,
+            pygame.SRCALPHA,
         )
-        self.rect = self.image.get_rect(center=(self.width // 2, self.height // 2 - 82))
+        self.rect = self.image.get_rect(center=(self.width // 2, self.height // 2))
+
+        self.boosted = False
+        self.boost_end_time = 0
+        self.normal_speed = self.speed
 
     def movement(self):
         keys = pygame.key.get_pressed()
@@ -112,6 +119,13 @@ class Player(pygame.sprite.Sprite):
 
         if pygame.sprite.spritecollideany(self, power_pellet_grp):
             pygame.sprite.spritecollide(self, power_pellet_grp, True)
+            self.boosted = True
+            self.boost_end_time = pygame.time.get_ticks() + 5000
+            self.speed = self.normal_speed * 2
+
+        if self.boosted and pygame.time.get_ticks() >= self.boost_end_time:
+            self.boosted = False
+            self.speed = self.normal_speed
 
         pygame.sprite.spritecollide(self, pellet_grp, True)
 
@@ -138,7 +152,7 @@ class Board:
             self.board
         )
 
-        self.player = Player(self.width, self.height, 20, 20, (255, 255, 0))
+        self.player = Player(self.width, self.height, (255, 255, 0))
 
         pellet_color = (200, 200, 200)
         power_pellet_color = (255, 40, 40)
