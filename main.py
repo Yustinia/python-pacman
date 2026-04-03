@@ -1,5 +1,3 @@
-from math import pi
-
 import pygame
 
 from src.boards import level_one
@@ -20,17 +18,22 @@ class Background:
 
 
 class Pellet(pygame.sprite.Sprite):
-    def __init__(self, radius: int, coord_x: int, coord_y: int) -> None:
+    def __init__(
+        self,
+        coord_x: int,
+        coord_y: int,
+        color: tuple[int, int, int],
+        radius: int = 5,
+    ) -> None:
         super().__init__()
 
         self.radius = radius
         self.coord_x = coord_x
         self.coord_y = coord_y
-
-        pellet_clr = (200, 200, 200)
+        self.color = color
 
         self.image = pygame.Surface((radius * 2, radius * 2))
-        pygame.draw.circle(self.image, pellet_clr, (radius, radius), radius)
+        pygame.draw.circle(self.image, self.color, (radius, radius), radius)
         self.rect = self.image.get_rect(center=(coord_x, coord_y))
 
     def draw(self, screen):
@@ -42,15 +45,37 @@ class Board:
         self.width = width
         self.height = height
 
+        self.board = level_one.copy()
+
         bg_clr = (10, 10, 20)
-        self.board = Background(self.width, self.height, bg_clr)
+        self.background = Background(self.width, self.height, bg_clr)
 
         self.pellets = pygame.sprite.Group()
-        for i in range(10):
-            self.pellets.add(Pellet(5, self.width // 2 + i * 20, self.height // 2))
+        board_wd, board_ht = self.width // len(self.board[0]), self.height // len(
+            self.board
+        )
+
+        pellet_color = (200, 200, 200)
+        power_pellet_color = (255, 40, 40)
+        for i in range(len(self.board)):
+            for j in range(len(self.board[i])):
+                pellet_pos = (
+                    j * board_wd + board_wd // 2,
+                    i * board_ht + board_ht // 2,
+                )
+
+                if self.board[i][j] == 1:
+                    self.pellets.add(Pellet(pellet_pos[0], pellet_pos[1], pellet_color))
+
+                if self.board[i][j] == 2:
+                    self.pellets.add(
+                        Pellet(
+                            pellet_pos[0], pellet_pos[1], power_pellet_color, radius=10
+                        )
+                    )
 
     def draw(self, screen):
-        self.board.draw(screen)
+        self.background.draw(screen)
 
         for pellet in self.pellets:
             pellet.draw(screen)
