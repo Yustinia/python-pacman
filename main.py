@@ -66,66 +66,6 @@ class Board:
                         line_thickness,
                     )
 
-                if self.board[i][j] == 4:
-                    pygame.draw.arc(
-                        screen,
-                        line_color,
-                        (
-                            center_x,
-                            center_y,
-                            self.tile_size,
-                            self.tile_size,
-                        ),
-                        arc_pi / 2,
-                        arc_pi,
-                        line_thickness,
-                    )
-
-                if self.board[i][j] == 5:
-                    pygame.draw.arc(
-                        screen,
-                        line_color,
-                        (
-                            center_x - self.tile_size,
-                            center_y,
-                            self.tile_size,
-                            self.tile_size,
-                        ),
-                        arc_pi * 2,
-                        arc_pi / 2,
-                        line_thickness,
-                    )
-
-                if self.board[i][j] == 6:
-                    pygame.draw.arc(
-                        screen,
-                        line_color,
-                        (
-                            center_x,
-                            center_y - self.tile_size,
-                            self.tile_size,
-                            self.tile_size,
-                        ),
-                        arc_pi,
-                        (3 * arc_pi) / 2,
-                        line_thickness,
-                    )
-
-                if self.board[i][j] == 7:
-                    pygame.draw.arc(
-                        screen,
-                        line_color,
-                        (
-                            center_x - self.tile_size,
-                            center_y - self.tile_size,
-                            self.tile_size,
-                            self.tile_size,
-                        ),
-                        (3 * arc_pi) / 2,
-                        arc_pi * 2,
-                        line_thickness,
-                    )
-
 
 class Game:
     def __init__(self, width: int, height: int) -> None:
