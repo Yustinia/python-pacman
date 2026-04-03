@@ -25,46 +25,15 @@ class Board:
         self.height = height
         self.board = board
 
-        board_width, board_height = (
-            self.width // len(self.board[0]),
-            self.height // len(self.board),
-        )
-        self.tile_size = min(board_width, board_height)
-
     def draw(self, screen):
         pellet_rad = 4
         pellet_color = (200, 200, 200)
-        line_thickness = 4
-        line_color = (40, 40, 200)
-        arc_pi = pi
+        rect_color = (40, 40, 200)
 
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
-                center_x = j * self.tile_size + self.tile_size // 2
-                center_y = i * self.tile_size + self.tile_size // 2
-
                 if self.board[i][j] == 1:
-                    pygame.draw.circle(
-                        screen, pellet_color, (center_x, center_y), pellet_rad
-                    )
-
-                if self.board[i][j] == 2:
-                    pygame.draw.line(
-                        screen,
-                        line_color,
-                        (center_x, center_y - self.tile_size // 2),
-                        (center_x, center_y + self.tile_size // 2),
-                        line_thickness,
-                    )
-
-                if self.board[i][j] == 3:
-                    pygame.draw.line(
-                        screen,
-                        line_color,
-                        (center_x - self.tile_size // 2, center_y),
-                        (center_x + self.tile_size // 2, center_y),
-                        line_thickness,
-                    )
+                    pass
 
 
 class Game:
